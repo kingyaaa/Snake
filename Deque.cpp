@@ -1,11 +1,17 @@
 #include "Deque.h"
 #include<iostream>
 #include<Windows.h>
+#define SIZE 40
 using namespace std;
 Deque::Deque()
 {
 	front = NULL;
 	rear = NULL;
+	loadimage(&BLANK, _T("Blank.jpg"), SIZE, SIZE);
+	loadimage(&SHUP, _T("SnakeHeadUp.jpg"), SIZE, SIZE);
+	loadimage(&SHDOWN, _T("SnakeHeadDown.jpg"), SIZE, SIZE);
+	loadimage(&SHLEFT, _T("SnakeHeadLeft.jpg"), SIZE, SIZE);
+	loadimage(&SHRIGHT, _T("SnakeHeadRight.jpg"), SIZE, SIZE);
 }
 void Deque::gotoxy(int x, int y)
 {
@@ -16,7 +22,7 @@ void Deque::gotoxy(int x, int y)
 	hOutput = GetStdHandle(STD_OUTPUT_HANDLE);
 	SetConsoleCursorPosition(hOutput, pos);
 }
-void Deque::push(int i, int j)//尾插
+void Deque::push(int i, int j,int dir)//尾插
 {
 	Node* p = new Node;
 	p->x = i;
@@ -28,10 +34,15 @@ void Deque::push(int i, int j)//尾插
 	else
 		rear->next = p;
 	rear = p;
-	gotoxy(i, j);
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY |
-		FOREGROUND_GREEN | FOREGROUND_BLUE);
-	cout << p->z;
+	//gotoxy(i, j);
+	//SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY |
+	//	FOREGROUND_GREEN | FOREGROUND_BLUE);
+	//cout << p->z;
+	if (dir == 1)	putimage(i * SIZE, j * SIZE, &SHUP);
+	if (dir == 2)	putimage(i * SIZE, j * SIZE, &SHDOWN);
+	if (dir == 3)	putimage(i * SIZE, j * SIZE, &SHLEFT);
+	if (dir == 4)	putimage(i * SIZE, j * SIZE, &SHRIGHT);
+	//插入蛇头图像(四个方向不相同)
 }
 void Deque::pop(int& i, int& j, char& k)
 {
@@ -40,8 +51,9 @@ void Deque::pop(int& i, int& j, char& k)
 		exit(-1);
 	}
 	else {
-		gotoxy(front->x, front->y);
-		cout << " ";
+		//gotoxy(front->x, front->y);
+		//cout << " ";
+		putimage(front->x * SIZE, front->y * SIZE, &BLANK);
 		i = front->x;
 		j = front->y;
 		k = front->z;
@@ -62,9 +74,7 @@ bool Deque::judge(int x,int y)
 bool Deque::suicide(int i, int j)
 {
 	for (Node* p = front; p != rear; p = p->next) {
-		if ((p->x == i && p->y == j)||i== 0 || j == 0 || i == 59 || j == 29)//墙的坐标已知;
-			//gotoxy(0, 0);
-			//cout << "WRONG!";
+		if ((p->x == i && p->y == j)||i== 0 || j == 0 || i == 15 || j == 11)//墙的坐标已知;
 			return false;
 	}
 	return true;

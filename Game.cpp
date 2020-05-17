@@ -17,80 +17,110 @@ Game::Game(int max)
 void Game::NewGame()
 {
 	Wall();
-	int i, j, ope = 0,flag = 1;
+	snake.initial(150);
+	//PlayGame();
+	/*int i, j, ope = 0,flag = 1;
 	i = 20, j = 12;
-	gotoxy(24, 12);
-	cout << "开 始 游 戏";
-	gotoxy(24, 14);
-	cout << "最 高 纪 录";
-	gotoxy(20, 12);
-	cout << "→";
+	//gotoxy(24, 12);
+	//cout << "开 始 游 戏";
+	outtextxy(24 * SIZE, 12 * SIZE, _T("开始游戏"));
+	//gotoxy(24, 14);
+	//cout << "最 高 纪 录";
+	outtextxy(24*SIZE, 14*SIZE, _T("最高纪录"));
+	//gotoxy(20, 12);
+	//cout << "→";
+	//outtextxy(20*SIZE, 12*SIZE, _T("→"));
 	//通过上下键选择不同的功能
+	MOUSEMSG m;
 	while (1) {
+		FlushMouseMsgBuffer();
+		m = GetMouseMsg();
 		if (!flag)
 			return;
-		if (_kbhit()) {
-			char ch;
-			ch = _getch();
-			switch (ch) {
-				//向下:
-			case 80: {
-				if (j == 14)
-					break;
-				gotoxy(i, j);
-				cout << "  ";
-				ope = 1;
-				j = j + 2;
-				gotoxy(i, j);
-				cout << "→";
-				break;
-			}
-			case 13: {
-				switch (ope) {
-				case 0: {flag = 0; PlayGame(); break; }
-				case 1: {flag = 0; ScoreTop(); break; }
+		//if (_kbhit()) {
+			//char ch;
+			//ch = _getch();
+			switch (m.uMsg) {
+			case WM_LBUTTONDOWN:	//点左键
+			{
+				if (m.x >= 24 * SIZE && m.x <= 27 * SIZE && m.y == 12 * SIZE)
+				{
+					flag = 0;
+					PlayGame();
 				}
+				if (m.x >= 24 * SIZE && m.x <= 27 * SIZE && m.y == 14 * SIZE) {
+					flag = 0;
+					ScoreTop();
+				}
+			//case 80: {
+				//if (j == 14 * SIZE)
+				//	break;
+				//gotoxy(i, j);
+				//cout << "  ";
+				//ope = 1;
+				//j = j + 2;
+				//gotoxy(i, j);
+				//cout << "→";
+				//break;
+			//}
+			//case 13: {
+			//	switch (ope) {
+			//	case 0: {flag = 0; PlayGame(); break; }
+			//	case 1: {flag = 0; ScoreTop(); break; }
+			//	}
+			//	break;
+			//}
+			//case 72: {
+			//	if (j == 12)
+			//		break;
+			//	gotoxy(i, j);
+			//	cout << "  ";
+			//	ope = 0;
+			//	j = j - 2;
+			//	gotoxy(i, j);
+			//	cout << "→";
+			//	break;
+			//}
 				break;
 			}
-			case 72: {
-				if (j == 12)
-					break;
-				gotoxy(i, j);
-				cout << "  ";
-				ope = 0;
-				j = j - 2;
-				gotoxy(i, j);
-				cout << "→";
+			default:
 				break;
-			}
-			}
 		}
-	}
+	}*/
 }
 //打印墙的坐标
 void Game::Wall()//墙是60*30;
 {
 	//红墙
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY |
-		FOREGROUND_RED);
-	for (int j = 0; j < 60; j++) {
-		gotoxy(j, 0);
-		cout << "#";
-	}
-	for (int i = 0; i < 30; i++) {
-		gotoxy(0, i);
-		cout << "#";
-	}
-	for (int j = 0; j < 30; j++) {
-		gotoxy(59, j);
-		cout << "#";
-	}
-	for (int i = 0; i < 60; i++) {
+	//SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY |
+	//	FOREGROUND_RED);
+	setlinestyle(PS_SOLID, 10);   //设置画线的大小
+	setlinecolor(RED);
+	line(0, 0, 16 * SIZE, 0);
+	line(0, 12 * SIZE, 16 * SIZE, 12 * SIZE);
+	line(0, 0, 0, 12 * SIZE);
+	line(16 * SIZE, 0, 16 * SIZE, 12 * SIZE);
+	/*for (int j = 0; j < 60; j++) {
+		//gotoxy(j, 0);
+		//cout << "#";
+	}*/
+	//for (int i = 0; i < 30; i++) {
+		//gotoxy(0, i);
+		//cout << "#";
+	//	line(0, i, 1, i);
+	//}
+	//for (int j = 0; j < 30; j++) {
+		//gotoxy(59, j);
+		//cout << "#";
+	//	line(59* SIZE, j, 60*SIZE, j);
+	//}
+	/*for (int i = 0; i < 60; i++) {
 		gotoxy(i, 29);
 		cout << "#";
 	}
 	//gotoxy(70, 15);
 	//cout << "当前得分:";
+	*/
 }
 void Game::ScoreTop()
 {

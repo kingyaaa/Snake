@@ -9,6 +9,9 @@ void hide();//Òþ²Ø¹â±ê
 int main()
 {
 	int max = 0;
+	initgraph(640, 480);
+	setbkcolor(WHITE);
+	cleardevice();
 	hide();
 	int t = 1;
 	while (t) {
@@ -16,6 +19,7 @@ int main()
 		game.NewGame();
 		max = game.ScoringBar();
 	}
+	closegraph();
 }
 
 void hide()

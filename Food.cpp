@@ -3,6 +3,7 @@
 #include<ctime>
 #include<Windows.h>
 #define random(a,b) (rand() % (b - a)) + a + 1//计算随机数
+#define SIZE 40
 using namespace std;
 void Food::gotoxy(int x, int y)
 {
@@ -20,6 +21,8 @@ Food::Food()
 	x = 0;
 	y = 0;
 	count = 0;
+	loadimage(&RedRandomFood, _T("RedFood.jpg"), SIZE, SIZE);
+	loadimage(&SPECIAL, _T("SpecialFood"), SIZE, SIZE);
 }
 void Food::randomFood()
 {
@@ -31,10 +34,11 @@ void Food::randomFood()
 		x = random(0, 58);
 		y = random(0, 28);
 	}
-	gotoxy(x, y);
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY |
-		FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
-	cout << "*";
+	//gotoxy(x, y);
+	//SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY |
+	//	FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+	//cout << "*";
+	putimage(x * SIZE, y * SIZE, &RedRandomFood);
 }
 int Food::specialFood()
 {
@@ -48,27 +52,35 @@ int Food::specialFood()
 		i = random(0, 58);
 		j = random(0, 28);
 	}
-	gotoxy(i, j);
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY |
-		FOREGROUND_RED | FOREGROUND_BLUE);
-	cout << "&";
-	q.gotoxy(80, 8);
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY |
-		FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
-	cout << "$ 是限时食物，很快就要消失了嗷;";
+	//gotoxy(i, j);
+	//SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY |
+	//	FOREGROUND_RED | FOREGROUND_BLUE);
+	//cout << "&";
+	putimage(i * SIZE, j * SIZE, &SPECIAL);
+	
+	//TODO
+
+	//q.gotoxy(80, 8);
+	//SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY |
+	//	FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+	//cout << "$ 是限时食物，很快就要消失了嗷;";
 	return 0;
 }
 void Food::speFade()
 {
 	i = 0;
 	j = 0;
-	gotoxy(80, 8);
+	
+	//TODO
+
+	//gotoxy(80, 8);
 	//限时食物消失，提示语也消失;
-	cout << "                                 ";
-	gotoxy(0, 0);
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY |
-		FOREGROUND_RED);
-	cout << "#";
+	//cout << "                                 ";
+	//gotoxy(0, 0);
+	//SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY |
+	//	FOREGROUND_RED);
+	//cout << "#";
+
 }
 Food::~Food()
 {

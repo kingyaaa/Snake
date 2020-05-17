@@ -1,5 +1,6 @@
 #pragma once
 #include"Deque.h"
+#include"Food.h"
 //class Food;
 class Snake
 {
@@ -7,6 +8,7 @@ private:
     int time1,score,bonus;//初始化速度，长度,分数;
     Deque q;//链表实现的队列
     Food f;
+    IMAGE SHBODY,SVBODY,EATEN;
 public:
     Snake();
     //核心算法：初始化蛇的坐标后，每隔0.75秒移动一次，即打印时间的间隔；速度加快就是打印间隔缩短；（170）可作为正常速度，（200）作为简易模式，（100）困难；

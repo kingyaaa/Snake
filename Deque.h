@@ -1,12 +1,12 @@
 #pragma once
-#include"Food.h"
+#include<graphics.h>
 class Deque
 {
 public:
 	Deque();
 	
 	//添加新的结点作为蛇头，相当于蛇往前移动了一步
-	void push(int i, int j);
+	void push(int i, int j,int dir);
 	
 	//删除蛇尾的结点，即消除蛇尾走过的痕迹;
 	void pop(int& i, int& j, char& k);
@@ -24,4 +24,5 @@ private:
 		Node* next;
 	}*front, * rear;
 	friend class Food;
+	IMAGE BLANK, SHUP, SHDOWN, SHLEFT, SHRIGHT;
 };

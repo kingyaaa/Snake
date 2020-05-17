@@ -4,11 +4,14 @@
 #include<iomanip>
 #include<iostream>
 #include<conio.h>
+#include<graphics.h>
+#define SIZE 40
 using namespace std;
 class Game//提供对外接口；
 {
 private:
     //成员对象
+    IMAGE wall;
     Snake snake;
     int time;
     int MaxScore;
