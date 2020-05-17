@@ -3,27 +3,17 @@
 #include<conio.h>
 #include<Windows.h>
 #include<iostream>
-#define time1 200
+//#define time1 150
 using namespace std;
 
 Snake::Snake()
 {
-    //长度可以等价计分;速度等式于Sleep间隔;
-    length = 0;
-    speed = 0;
+    score = 0;
+    bonus = 0;
+    time1 = 0;
 }
-/*void gotoxy(int x, int y)
+void Snake::initial(int time1)
 {
-    COORD pos;
-    HANDLE hOutput;
-    pos.X = x;
-    pos.Y = y;
-    hOutput = GetStdHandle(STD_OUTPUT_HANDLE);
-    SetConsoleCursorPosition(hOutput, pos);
-}*/
-void Snake::initial()
-{
-    int flag = 1;
     //撤销结点时将结点中的数据赋值给x,y,k
     int x, y;
     char k;
@@ -31,293 +21,169 @@ void Snake::initial()
     int i = 2;
     int j = 2;
     q.push(i, j);
-    for (; i < 12;i++) {
-        q.gotoxy(i,j);
+    for (; i < 4; i++) {
+        q.gotoxy(i, j);
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY |
+            FOREGROUND_RED | FOREGROUND_GREEN);
+        //system("color 02");
         cout << "X";
-        //cout << ">";
         q.push(i + 1, j);
     }
+    f.randomFood();
+    Move(i, j, 1, 0, 4,-1);
     //初始移动方向：向右
-    while (1) {
-        Sleep(time1);
-        q.gotoxy(i, j);
-        //cout << ">";//将原蛇头改为“X”
-        cout << "X";
-        q.pop(x, y, k);
-        q.push(i + 1, j);//添加新蛇头;
-        i++;
-        //q.pop(x, y, k);
-        if (_kbhit()) {
-            //i--;
-            char ch;
-            ch = _getch();
-            switch (ch) {
-                
-                //向上;
-            case 72: {
-                moveUp(i, j);
-                break;
-            }
-                   //向下;
-            case 80: {
-                moveDown(i, j);
-                break;
-            }
-            default:
-                break;
-            }
-        }
-    }
 }
-/*void Snake::changeDirection(int i,int j)
+
+bool Snake::changeDirection(int i,int j,int dir,int limStep)
 {
-    //蛇在无限循环中每次移动一格，如果按下方向键就调整移动的方向，判断移动后是否会撞到了身体或墙壁；
-    char ch;
-    ch = _getch();
+    //方向——上：1，下：2，左：3，右：4;
+    int flag = 1,right,down,cur_dir,step = limStep;
+    //if (_kbhit()) {
+        char ch;
+        ch = _getch();
         switch (ch) {
-    //向上;
-            case 72: {
-            moveUp(i, j);
-            break; 
-        }
-    //向下;
-            case 80: {
-            moveDown(i, j);
+        //向左
+        case 75: {
+            cur_dir = 3;
+            //原本是向上或向下走，则符合条件
+            if (dir == 1 || dir == 2) {
+                right = -1;
+                down = 0;
+                flag = Move(i, j, right, down,cur_dir,step);
+                if (flag == 0)
+                    return false;
+            }
             break;
         }
-    //向左;
-            case 75: {
-            moveLeft(i, j);
+        //向右
+        case 77: {
+            cur_dir = 4;
+            if (dir == 1 || dir == 2) {
+                right = 1;
+                down = 0;
+                //Move(i, j, right, down, cur_dir);
+                flag = Move(i, j, right, down, cur_dir,step);
+                if (flag == 0)
+                    return false;
+            }
             break;
         }
-            case 77:{ 
-            moveRight(i, j);
+        //向上
+        case 72: {
+            cur_dir = 1;
+            if (dir == 3 || dir == 4) {
+                right = 0;
+                down = -1;
+                //Move(i, j, right, down,cur_dir);
+                flag = Move(i, j, right, down, cur_dir,step);
+                if (flag == 0)
+                    return false;
+            }
             break;
         }
-    }
-    //return false;///？
-}*/
-void Snake::moveDown(int i, int j)
-{
-    //撤销结点时将结点中的数据赋值给x,y,k
-    int x, y;
-    char k;
-    //Sleep(1000);
-    q.gotoxy(i, j);
-    cout << "X";
-    //Sleep(1000);
-    //cout << "v";
-    q.pop(x, y, k);
-    q.push(i, j + 1);
-    if (!q.suicide(i, j + 1)) {
-        ExitGame();
-        return;
-    }
-    j++;
-    //只能左右转;
-    while (1) {
-        /*if (_kbhit()) {
-            changeDirection(i, j);
-        }*/
-        if (_kbhit()) {
-            char ch;
-            ch = _getch();
-            switch (ch) {
-            case 75: {
-                moveLeft(i, j);
-                break;
-            }
-            case 77: {
-                moveRight(i, j);
-                break;
-            }
-            default:
-                break;
-            }
-        }
-        Sleep(time1);
-        q.gotoxy(i, j);
-        cout << "X";
-        //cout << "V";
         //向下
-        q.pop(x, y, k);
-        q.push(i, j + 1);//增加蛇身，打印蛇头;
-        if (!q.suicide(i, j + 1))
-            ExitGame();
-        //q.suicide(i,j + 1);
-        j++;
-        //再次改变方向;
-       
-    }
-   
-}
-void Snake::moveUp(int i, int j)
-{
-    int x, y;
-    char k;
-    //Sleep(20);
-    q.gotoxy(i, j);
-    cout << "X";
-    //Sleep(1000);
-    //cout << "v";
-    q.pop(x, y, k);
-    q.push(i, j - 1);
-    if (!q.suicide(i, j - 1)) {
-        ExitGame();//定义一个flag,自杀后flag设为0，
-        return;
-    }
-    j--;
-    /*while (1) {
-        if (_kbhit()) {
-            changeDirection(i, j);
-        }*/
-    while (1) {
-        /*if (_kbhit()) {
-            changeDirection(i, j);
-        }*/
-        if (_kbhit()) {
-            char ch;
-            ch = _getch();
-            switch (ch) {
-            case 75: {
-                moveLeft(i, j);
-                break;
+        case 80: {
+            cur_dir = 2;
+            if (dir == 3 || dir == 4) {
+                right = 0;
+                down = 1;
+                //Move(i, j, right, down,cur_dir);
+                flag = Move(i, j, right, down, cur_dir,step);
+                if (flag == 0)
+                    return false;
             }
-            case 77: {
-                moveRight(i, j);
-                break;
-            }
-            default:
-                break;
-            }
+            break;
         }
-        Sleep(time1);
-        q.gotoxy(i, j);
-        cout << "X";
-        //cout << "V";
-        //向下
-        q.pop(x, y, k);
-        q.push(i, j - 1);//增加蛇身，打印蛇头;
-        //q.suicide(i,j - 1);
-        if (!q.suicide(i, j - 1)) {
-            ExitGame();
-            return;
+        default:
+            break;
         }
-        j--;
-        //再次改变方向;
-
-    }
+    //}
 }
 
-void Snake::moveRight(int i, int j)
+bool Snake::Move(int i, int j, int right, int down,int dir,int limStep)
 {
-    int x, y;
+    int direction = dir;
+    int x, y, count = 0,flag,tag;
     char k;
-    //Sleep(20);
-    q.gotoxy(i, j);
-    cout << "X";
-    //Sleep(1000);
-    //cout << ">";
-    q.pop(x, y, k);
-    q.push(i + 1, j);
-    if (!q.suicide(i + 1, j)) {
-        ExitGame();
-        return;
-    }
-    i++;
     while (1) {
+        q.gotoxy(80, 15);
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY |
+            FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+        cout << "当前得分:";
+        cout << goal();
+        flag = 0;
+        tag = 0;
         if (_kbhit()) {
-            char ch;
-            ch = _getch();
-            switch (ch) {
-                //向上;
-            case 72: {
-                moveUp(i, j);
-                break;
-            }
-                   //向下;
-            case 80: {
-                moveDown(i, j);
-                break;
-            } //changeDirection(i, j);
-            default:
-                break;
-            }
+            if(!changeDirection(i, j, direction,limStep))
+                return false;
         }
-        Sleep(time1);
+        if(count!=0)
+            Sleep(time1);
         q.gotoxy(i, j);
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY |
+            FOREGROUND_RED | FOREGROUND_GREEN);
         cout << "X";
-        //cout << "Z";
-        //cout << ">";
-        //cout << "I";
-        //向右
-        q.pop(x, y, k);
-        q.push(i + 1, j);//增加蛇身，打印蛇头;
-        if (!q.suicide(i + 1, j)) {
-            ExitGame();
-            return;
+        
+        //吃到限时食物;
+        if (f.spec_i() == i + right && f.spec_j() == j + down) {
+            limStep = -1;
+            q.gotoxy(i + right, j + down);
+            cout << " ";
+            //将限时食物的坐标修改为(0,0),防止蛇再次到此位置时意外触发判断语句
+            f.speFade();
+            //限时食物 +5 分
+            tag = 1;
         }
-        i++;
-        //再次改变方向;
-    }
-}
-void Snake::moveLeft(int i, int j)
-{
-    int x, y;
-    char k;
-    //Sleep(1000);
-    q.gotoxy(i, j);
-    cout << "X";
-    //Sleep(1000);
-    //cout << ">";
-    q.pop(x, y, k);
-    q.push(i - 1, j);
-    if (!q.suicide(i - 1, j)) {
-        ExitGame();
-        return;
-    }
-    i--;
-    while (1) {
-        if (_kbhit()) {
-            //changeDirection(i, j);
-            char ch;
-            ch = _getch();
-            switch (ch) {
-                //向上;
-            case 72: {
-                moveUp(i, j);
-                break;
-            }
-                   //向下;
-            case 80: {
-                moveDown(i, j);
-                break;
-            } //changeDirection(i, j);
-            default:
-                break;
+        if (tag == 1) {
+            bonus += 5;
+            q.push(i + right, j + down);
+        }
+
+        //吃掉普通食物
+        if (f.loc_x() == i + right && f.loc_y() == j + down) {
+            q.gotoxy(i + right, j + down);
+            cout << " ";
+            flag = 1;
+        }
+        //普通移动
+        if (flag == 0 && tag == 0) {
+            q.pop(x, y, k);
+            q.push(i + right, j + down);
+            if (limStep > 0)
+                limStep--;//蛇每移动一步,限定步数少一步
+            //限时食物消失
+            if (limStep == 0) {
+                q.gotoxy(f.spec_i(), f.spec_j());
+                cout << " ";
+                f.speFade();
             }
         }
-        Sleep(time1);
-        q.gotoxy(i, j);
-        cout << "X";
-        //cout << "Z";
-        //cout << ">";
-        //cout << "I";
-        //向右
-        q.pop(x, y, k);
-        q.push(i - 1, j);//增加蛇身，打印蛇头;
-        if (!q.suicide(i - 1, j)) {
-            ExitGame();
-            return;
+        if (flag == 1) {
+            score++;
+            f.randomFood();
+            //吃到了第五个食物,则进入判断语句
+            if (score % 5 == 0) {// 每吃掉5个普通食物，附加产生一个限时食物，在给定的移动步数（比如30个）之后会自动消失,吃掉会加5分;
+                f.specialFood();
+                limStep = 31;//因程序流程的问题，多增加一步
+            }
+            q.push(i + right, j + down);
+            if (limStep > 0) {
+                limStep--;
+                if (limStep == 0) {
+                    q.gotoxy(f.spec_i(), f.spec_j());
+                    cout << " ";
+                    f.speFade();
+                }
+            }
         }
-        i--;
-        //再次改变方向;
+        //limStep = 30; 同时出现限时食物和普通食物
+        if (!q.suicide(i + right, j + down)) {
+            return false;
+        }//后续ExitGame();
+        i += right;
+        j += down;
+        count = 1;
     }
-}
-void Snake::ExitGame()
-{
-    system("cls");
-    cout << "Game Over";
 }
 Snake::~Snake()
 {
