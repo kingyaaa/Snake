@@ -3,6 +3,7 @@
 #include<conio.h>
 #include<Windows.h>
 #include<iostream>
+#include<thread>
 #define SIZE 40
 using namespace std;
 
@@ -139,6 +140,7 @@ bool Snake::Move(int i, int j, int right, int down,int dir,int limStep)
         //SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY |
         //    FOREGROUND_RED | FOREGROUND_GREEN);
         //cout << "X"
+        
         //吃到限时食物;
         if (f.spec_i() == i + right && f.spec_j() == j + down) {
             limStep = -1;
@@ -154,9 +156,11 @@ bool Snake::Move(int i, int j, int right, int down,int dir,int limStep)
             bonus += 5;
             limStep = -1;
             q.push(i + right, j + down,dir);
+            //cout << f.loc_x() << f.loc_y();
         }
+        
         //吃掉普通食物
-        if (tag != 1 &&  f.loc_x() == i + right && f.loc_y() == j + down) {
+        if (f.loc_x() == i + right && f.loc_y() == j + down) {
             putimage((i + right) * SIZE, (j + down) * SIZE, &EATEN);
             //q.gotoxy(i + right, j + down);
             //cout << " ";
@@ -178,12 +182,13 @@ bool Snake::Move(int i, int j, int right, int down,int dir,int limStep)
                 f.randomFood();
             }
             putimage(f.loc_x() * SIZE, f.loc_y() * SIZE, &RedRandomFood);
+            
             //吃到了第五个食物,则进入判断语句
             //if (flag == 1 && score % 3 == 0) {// 每吃掉5个普通食物，附加产生一个限时食物，在给定的移动步数（比如30个）之后会自动消失,吃掉会加5分;
-            if (score % 3 == 0) {
+            if (score % 5 == 0) {
                 f.specialFood();
-                //判断随机坐标是否与蛇的坐标和普通食物的坐标重合
-                while (!q.judge(f.spec_i(), f.spec_j())) {
+                //判断随机坐标是否与蛇的坐标或普通食物的坐标重合
+                while (!q.judge(f.spec_i(), f.spec_j()) || (f.spec_i() == f.loc_x() && f.loc_y() == f.spec_j())) {
                     f.specialFood();
                 }
                 putimage(f.spec_i() * SIZE, f.spec_j() * SIZE, &SPECIAL);

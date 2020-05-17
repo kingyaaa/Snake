@@ -17,7 +17,7 @@ Game::Game(int max)
 void Game::NewGame()
 {
 	Wall();
-	snake.initial(120);
+	snake.initial(100);
 	//PlayGame();
 	/*int i, j, ope = 0,flag = 1;
 	i = 20, j = 12;

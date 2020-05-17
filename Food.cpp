@@ -25,7 +25,7 @@ Food::Food()
 void Food::randomFood()
 {
 	//Deque q;
-	srand((int)time(0));
+	srand((unsigned)time(NULL));
 	x = random(0, 14);
 	y = random(0, 10);
 	/**
@@ -41,7 +41,7 @@ void Food::randomFood()
 }
 int Food::specialFood()
 {
-	srand((int)time(0));
+	srand((unsigned)time(NULL));
 	i = random(0, 14);
 	j = random(0, 10);
 	//gotoxy(i, j);
