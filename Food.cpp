@@ -21,42 +21,33 @@ Food::Food()
 	x = 0;
 	y = 0;
 	count = 0;
-	loadimage(&RedRandomFood, _T("RedFood.jpg"), SIZE, SIZE);
-	loadimage(&SPECIAL, _T("SpecialFood"), SIZE, SIZE);
 }
 void Food::randomFood()
 {
-	Deque q;
+	//Deque q;
 	srand((int)time(0));
-	x = random(0, 58);
-	y = random(0, 28);
+	x = random(0, 14);
+	y = random(0, 10);
+	/**
 	while(!q.judge(x, y)) { //用到了Deque；
-		x = random(0, 58);
-		y = random(0, 28);
+		x = random(0, 14);
+		y = random(0, 10);
 	}
+	**/
 	//gotoxy(x, y);
 	//SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY |
 	//	FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
 	//cout << "*";
-	putimage(x * SIZE, y * SIZE, &RedRandomFood);
 }
 int Food::specialFood()
 {
-	//int i,j;
-	Deque q;
 	srand((int)time(0));
-	i = random(0, 58);
-	j = random(0, 28);
-	//判断随机坐标是否与蛇的坐标和普通食物的坐标重合
-	while ((!q.judge(i, j)) || (i == x && j == y)) { //用到了Deque；
-		i = random(0, 58);
-		j = random(0, 28);
-	}
+	i = random(0, 14);
+	j = random(0, 10);
 	//gotoxy(i, j);
 	//SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY |
 	//	FOREGROUND_RED | FOREGROUND_BLUE);
 	//cout << "&";
-	putimage(i * SIZE, j * SIZE, &SPECIAL);
 	
 	//TODO
 
@@ -68,8 +59,8 @@ int Food::specialFood()
 }
 void Food::speFade()
 {
-	i = 0;
-	j = 0;
+	i = -1;
+	j = -1;
 	
 	//TODO
 

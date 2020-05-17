@@ -64,6 +64,8 @@ void Deque::pop(int& i, int& j, char& k)
 }
 bool Deque::judge(int x,int y)
 {
+	if(rear!= NULL && rear->x == x && rear->y == y)
+		return false;
 	for (Node* p = front; p != rear; p = p->next) {
 		if (p->x == x && p->y == y)
 			return false;
@@ -74,7 +76,7 @@ bool Deque::judge(int x,int y)
 bool Deque::suicide(int i, int j)
 {
 	for (Node* p = front; p != rear; p = p->next) {
-		if ((p->x == i && p->y == j)||i== 0 || j == 0 || i == 15 || j == 11)//墙的坐标已知;
+		if ((p->x == i && p->y == j)|| i== 0 || j == 0 || i == 15 || j == 11)//墙的坐标已知;
 			return false;
 	}
 	return true;

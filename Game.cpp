@@ -17,7 +17,7 @@ Game::Game(int max)
 void Game::NewGame()
 {
 	Wall();
-	snake.initial(150);
+	snake.initial(120);
 	//PlayGame();
 	/*int i, j, ope = 0,flag = 1;
 	i = 20, j = 12;
@@ -94,7 +94,7 @@ void Game::Wall()//墙是60*30;
 	//红墙
 	//SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY |
 	//	FOREGROUND_RED);
-	setlinestyle(PS_SOLID, 10);   //设置画线的大小
+	setlinestyle(PS_SOLID, 80);   //设置画线的大小
 	setlinecolor(RED);
 	line(0, 0, 16 * SIZE, 0);
 	line(0, 12 * SIZE, 16 * SIZE, 12 * SIZE);
@@ -107,12 +107,10 @@ void Game::Wall()//墙是60*30;
 	//for (int i = 0; i < 30; i++) {
 		//gotoxy(0, i);
 		//cout << "#";
-	//	line(0, i, 1, i);
 	//}
 	//for (int j = 0; j < 30; j++) {
 		//gotoxy(59, j);
 		//cout << "#";
-	//	line(59* SIZE, j, 60*SIZE, j);
 	//}
 	/*for (int i = 0; i < 60; i++) {
 		gotoxy(i, 29);

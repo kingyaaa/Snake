@@ -9,7 +9,7 @@ void hide();//Òþ²Ø¹â±ê
 int main()
 {
 	int max = 0;
-	initgraph(640, 480);
+	initgraph(640, 480,SHOWCONSOLE);
 	setbkcolor(WHITE);
 	cleardevice();
 	hide();
@@ -17,11 +17,11 @@ int main()
 	while (t) {
 		Game game(max);
 		game.NewGame();
-		max = game.ScoringBar();
+		t = 0;
+		//max = game.ScoringBar();
 	}
 	closegraph();
 }
-
 void hide()
 {
 	CONSOLE_CURSOR_INFO cursor_info = { 1,0 };

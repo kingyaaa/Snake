@@ -5,7 +5,6 @@ class Food
 private:
     friend class Deque;
     int x,y,i,j,count;
-    IMAGE RedRandomFood,SPECIAL;//GREENFood, YELLOW, SPECIAL;
 public:
     Food();
     //普通食物随机出现
