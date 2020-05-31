@@ -21,57 +21,13 @@ Food::Food()
 	x = 0;
 	y = 0;
 	count = 0;
+	special = false;
 }
 void Food::randomFood()
 {
-	//Deque q;
 	srand((unsigned)time(NULL));
 	x = random(0, 14);
 	y = random(0, 10);
-	/**
-	while(!q.judge(x, y)) { //用到了Deque；
-		x = random(0, 14);
-		y = random(0, 10);
-	}
-	**/
-	//gotoxy(x, y);
-	//SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY |
-	//	FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
-	//cout << "*";
-}
-int Food::specialFood()
-{
-	srand((unsigned)time(NULL));
-	i = random(0, 14);
-	j = random(0, 10);
-	//gotoxy(i, j);
-	//SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY |
-	//	FOREGROUND_RED | FOREGROUND_BLUE);
-	//cout << "&";
-	
-	//TODO
-
-	//q.gotoxy(80, 8);
-	//SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY |
-	//	FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
-	//cout << "$ 是限时食物，很快就要消失了嗷;";
-	return 0;
-}
-void Food::speFade()
-{
-	i = -1;
-	j = -1;
-	
-	//TODO
-
-	//gotoxy(80, 8);
-	//限时食物消失，提示语也消失;
-	//cout << "                                 ";
-	//gotoxy(0, 0);
-	//SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY |
-	//	FOREGROUND_RED);
-	//cout << "#";
-
 }
 Food::~Food()
 {

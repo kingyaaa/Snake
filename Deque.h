@@ -24,5 +24,5 @@ private:
 		Node* next;
 	}*front, * rear;
 	friend class Food;
-	IMAGE BLANK, SHUP, SHDOWN, SHLEFT, SHRIGHT;
+	IMAGE BLANK;
 };

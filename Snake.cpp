@@ -12,35 +12,46 @@ Snake::Snake()
     score = 0;
     bonus = 0;
     time = 0;
-}
-void Snake::initial(int time1)
-{
-    time = time1;
-    loadimage(&SHBODY, _T("BodyH.jpg"), SIZE, SIZE);
-    loadimage(&SVBODY, _T("Body.jpg"), SIZE, SIZE);
+    color = 1;
     loadimage(&EATEN, _T("Blank.jpg"), SIZE, SIZE);
-    loadimage(&RedRandomFood, _T("RedFood.jpg"), SIZE, SIZE);
     loadimage(&SPECIAL, _T("SpecialFood.jpg"), SIZE, SIZE);
-    //初始化的小蛇
+}
+void Snake::initial()
+{
+    //初始化的小蛇,加载图片
+    if (color == 1) {
+        loadimage(&SHUP, _T("SnakeHeadUp.jpg"), SIZE, SIZE);
+        loadimage(&SHDOWN, _T("SnakeHeadDown.jpg"), SIZE, SIZE);
+        loadimage(&SHLEFT, _T("SnakeHeadLeft.jpg"), SIZE, SIZE);
+        loadimage(&SHRIGHT, _T("SnakeHeadRight.jpg"), SIZE, SIZE);
+        loadimage(&RandomFood, _T("RedFood.jpg"), SIZE, SIZE);
+        loadimage(&SHBODY, _T("RedBodyH.jpg"), SIZE, SIZE);
+        loadimage(&SVBODY, _T("RedBodyV.jpg"), SIZE, SIZE);
+    }
+    if (color == 2) {
+        loadimage(&SHUP, _T("YellowHeadUp.jpg"), SIZE, SIZE);
+        loadimage(&SHDOWN, _T("YellowHeadDown.jpg"), SIZE, SIZE);
+        loadimage(&SHLEFT, _T("YellowHeadLeft.jpg"), SIZE, SIZE);
+        loadimage(&SHRIGHT, _T("YellowHeadRight.jpg"), SIZE, SIZE);
+        loadimage(&RandomFood, _T("YellowFood.jpg"), SIZE, SIZE);
+        loadimage(&SHBODY, _T("YellowBodyH.jpg"), SIZE, SIZE);
+        loadimage(&SVBODY,_T("YellowBodyV.jpg"), SIZE, SIZE);
+    }
     int i = 2;
     int j = 2;
     q.push(i, j, 4);
-    //putimage(i * SIZE, j * SIZE, &SHRIGHT);
+    loadHead(i, j, 4);
     for (; i < 4; i++) {
-        //q.gotoxy(i, j);
-        //SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY |
-        //    FOREGROUND_RED | FOREGROUND_GREEN);
-        //system("color 02");
-        //cout << "X";
         putimage(i * SIZE, j * SIZE, &SHBODY);
         q.push(i + 1, j,4);
+        loadHead(i, j, 4);
     }
     //产生随机食物,判断食物坐标的合法性
     f.randomFood();
     while (!q.judge(f.loc_x(),f.loc_y())) {
         f.randomFood();
     }
-    putimage(f.loc_x() * SIZE, f.loc_y() * SIZE, &RedRandomFood);
+    putimage(f.loc_x() * SIZE, f.loc_y() * SIZE, &RandomFood);
     Move(i, j, 1, 0, 4,-1);
     //初始移动方向：向右
 }
@@ -111,101 +122,93 @@ bool Snake::changeDirection(int i,int j,int dir,int limStep)
         }
     //}
 }
-
+void Snake::loadHead(int i, int j, int dir)
+{
+    if (dir == 1)	putimage(i * SIZE, j * SIZE, &SHUP);
+    if (dir == 2)	putimage(i * SIZE, j * SIZE, &SHDOWN);
+    if (dir == 3)	putimage(i * SIZE, j * SIZE, &SHLEFT);
+    if (dir == 4)	putimage(i * SIZE, j * SIZE, &SHRIGHT);
+    //插入蛇头图像(四个方向不相同)
+}
 bool Snake::Move(int i, int j, int right, int down,int dir,int limStep)
 {
     int direction = dir;
-    int x, y, count = 0,flag,tag;               //tag:标志是否吃到了限时食物
-                                                //flag:标志是否吃到了普通食物
+    int x, y, count = 0,flag,tag;               //flag:标志是否吃到了食物
     char k;
     while (1) {
-        //q.gotoxy(80, 15);
-        //SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY |
-        //    FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
-        //cout << "当前得分:";
-        //cout << goal();
+        settextcolor(BLACK);
+        settextstyle(3 * SIZE / 4, 0, _T("微软雅黑"));
+        char str[20];
+        sprintf_s(str, "%s%d", " SCORE: ", score + bonus);
+        outtextxy(10*SIZE,0, str);
         flag = 0;
-        tag = 0;
         if (_kbhit()) {
             if(!changeDirection(i, j, direction,limStep))
                 return false;
         }
-        if(count!=0)
+        if (count != 0)
             Sleep(time);
-        if(dir == 1 || dir == 2)
+        if (dir == 1 || dir == 2)
             putimage(i * SIZE, j * SIZE, &SVBODY);
-        if(dir == 3|| dir == 4)
+        if (dir == 3|| dir == 4)
             putimage(i * SIZE, j * SIZE, &SHBODY);
-        //q.gotoxy(i, j);
-        //SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY |
-        //    FOREGROUND_RED | FOREGROUND_GREEN);
-        //cout << "X"
-        
-        //吃到限时食物;
-        if (f.spec_i() == i + right && f.spec_j() == j + down) {
-            limStep = -1;
-            //q.gotoxy(i + right, j + down);
-            //cout << " ";
+        if (f.loc_x() == i + right && f.loc_y() == j + down && !f.special) {
+            score++;
             putimage((i + right) * SIZE, (j + down) * SIZE, &EATEN);
-            //将限时食物的坐标修改为(0,0),防止蛇再次到此位置时意外触发判断语句
-            f.speFade();
-            //限时食物 +5 分
-            tag = 1;
+            flag = 1;
         }
-        if (tag == 1) {
-            bonus += 5;
+        //吃掉食物,食物消失
+        if (f.loc_x() == i + right && f.loc_y() == j + down && f.special) {
+            f.special = false;
             limStep = -1;
-            q.push(i + right, j + down,dir);
-            //cout << f.loc_x() << f.loc_y();
-        }
-        
-        //吃掉普通食物
-        if (f.loc_x() == i + right && f.loc_y() == j + down) {
+            bonus += 4;
+            score++;
             putimage((i + right) * SIZE, (j + down) * SIZE, &EATEN);
-            //q.gotoxy(i + right, j + down);
-            //cout << " ";
             flag = 1;
         }
         //普通移动
-        if (flag == 0 && tag == 0) {
+        if (flag == 0) {
             q.pop(x, y, k);
             q.push(i + right, j + down,dir);
+            loadHead(i + right, j + down, dir);
             if (limStep > 0)
                 limStep--;//蛇每移动一步,限定步数少一步
             //限时食物消失
         }
         if (flag == 1) {
-            score++;
             q.push(i + right, j + down, dir);
+            loadHead(i + right, j + down, dir);
             f.randomFood();
             while (!q.judge(f.loc_x(), f.loc_y())) {
                 f.randomFood();
             }
-            putimage(f.loc_x() * SIZE, f.loc_y() * SIZE, &RedRandomFood);
-            
             //吃到了第五个食物,则进入判断语句
-            //if (flag == 1 && score % 3 == 0) {// 每吃掉5个普通食物，附加产生一个限时食物，在给定的移动步数（比如30个）之后会自动消失,吃掉会加5分;
+            // 每吃掉5个普通食物，则食物变为限时食物，在给定的移动步数（比如30个）之后会自动消失,吃掉会加5分;
             if (score % 5 == 0) {
-                f.specialFood();
+                f.special = true;
                 //判断随机坐标是否与蛇的坐标或普通食物的坐标重合
-                while (!q.judge(f.spec_i(), f.spec_j()) || (f.spec_i() == f.loc_x() && f.loc_y() == f.spec_j())) {
-                    f.specialFood();
-                }
-                putimage(f.spec_i() * SIZE, f.spec_j() * SIZE, &SPECIAL);
-                limStep = 21;//因程序流程的问题，多增加一步
+                putimage(f.loc_x() * SIZE, f.loc_y() * SIZE, &SPECIAL);
+                limStep = 20;
+            }
+            else {
+                f.special = false;
+                putimage(f.loc_x() * SIZE, f.loc_y() * SIZE, &RandomFood);
             }
         }
-        //limStep = 10; 同时出现限时食物和普通食物
         if (!q.suicide(i + right, j + down)) {
             return false;
         }//后续ExitGame();
         i += right;
         j += down;
         if (limStep == 0) {
-            //q.gotoxy(f.spec_i(), f.spec_j());
-            //cout << " ";
-            putimage(f.spec_i() * SIZE, f.spec_j() * SIZE, &EATEN);
-            f.speFade();
+            limStep = -1;
+            putimage(f.loc_x() * SIZE, f.loc_y() * SIZE, &EATEN);
+            //限时消失后要产生一个新的食物
+            f.randomFood();
+            while (!q.judge(f.loc_x(), f.loc_y())) {
+                f.randomFood();
+            }
+            putimage(f.loc_x() * SIZE, f.loc_y() * SIZE, &RandomFood);
         }
         count = 1;
     }

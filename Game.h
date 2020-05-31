@@ -11,7 +11,7 @@ class Game//提供对外接口；
 {
 private:
     //成员对象
-    IMAGE wall;
+    IMAGE WELCOME,REDSNAKE,YELLOWSNAKE;
     Snake snake;
     int time;
     int MaxScore;
@@ -25,5 +25,7 @@ public:
     void ExitGame();//游戏结束界面：由snake.PlayGame()的指令触发
     void ScoreTop();//显示得分纪录
     void gotoxy(int i,int j);
+    void Store();//商店里有皮肤可以挑选
+    void loadWelcome();
     ~Game();
 };
